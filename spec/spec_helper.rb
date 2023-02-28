@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "json-path-builder"
+require File.join(__dir__, "..", 'dev', 'setup')
+require Pathname.new(__dir__).realpath.join('coverage_helper').to_s
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
