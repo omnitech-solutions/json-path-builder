@@ -35,6 +35,25 @@ module JsonPath
         expect(instance.build_for(input)).to eql({ list: list })
       end
 
+      context 'with complex mapping input' do
+        let(:input) { { data: [{ name: 'some-name', region_code: 'AB' }] } }
+
+        it 'supports building on list attributes' do
+          instance.from_each(:data, transform_with_builder: true, transform: proc {|b|
+            b.from(:name)
+            b.from(:region_code, to: :state)
+          })
+
+          expect(instance.build_for(input)).to eql({ data: [{ name: 'some-name', state: 'AB' }] })
+        end
+      end
+
+      it 'handles complex mapping via builder' do
+        instance.from_each(:list)
+
+        expect(instance.build_for(input)).to eql({ list: list })
+      end
+
       it 'handles renaming path name' do
         instance.from(:list, to: :another_list_key)
 
@@ -124,45 +143,5 @@ module JsonPath
         end
       end
     end
-
-    # describe PathsBuilder::PathContext do
-    #   let(:key) { "some-value" }
-    #   let(:other_key) { "some-other-value" }
-    #   let(:list) { %w[some-list-value-1 some-list-value-2] }
-    #
-    #   let(:input) { { key: key, other_key: other_key, list: list }.as_json }
-    #   let(:builder) { PathsBuilder.new }
-    #   let(:path_context) { builder.path_context_collection.first }
-    #
-    #   before(:each) do
-    #     builder.from(:key, to: :another_key, transform: proc { |val| val.upcase })
-    #     builder.with_source_data(input)
-    #   end
-    #
-    #
-    #   it 'returns path context instance' do
-    #     expect(path_context).to be_instance_of(described_class)
-    #   end
-    #
-    #   describe '#wrapped_source_data' do
-    #     subject { path_context.wrapped_source_data }
-    #
-    #     context 'with custom data class' do
-    #       let(:wrapper_class) { Sharplaunch::PropertyListingDataWrapper }
-    #
-    #       before(:each) { builder.with_wrapped_data_class(wrapper_class) }
-    #
-    #       it 'returns custom class' do
-    #         expect(subject).to be_an_instance_of(wrapper_class)
-    #       end
-    #     end
-    #
-    #     context 'without custom data wrapper class' do
-    #       it 'returns default wrapper instance' do
-    #         expect(subject).to be_instance_of(PathsBuilder::DefaultDataWrapper)
-    #       end
-    #     end
-    #   end
-    # end
   end
 end

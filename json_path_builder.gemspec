@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'English'
-require File.expand_path('lib/json-path/version', __dir__)
+require File.expand_path('lib/json-path-builder/version', __dir__)
 
 Gem::Specification.new do |gem|
   gem.authors = ["Desmond O'Leary"]

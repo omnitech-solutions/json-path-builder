@@ -4,7 +4,7 @@ module JsonPath
     attr_reader :path_context_collection, :parent_path_context
 
     delegate :source_data, :nested_paths, :data_wrapper_class, :reject_from_paths!, to: :path_context_collection,
-                                                                                    allow_nil: true
+             allow_nil: true
 
     def initialize(parent_path_context: nil)
       @parent_path_context = parent_path_context
@@ -36,6 +36,7 @@ module JsonPath
 
       self
     end
+
     # rubocop:enable Metrics/ParameterLists
 
     # rubocop:disable Metrics/ParameterLists
@@ -52,6 +53,7 @@ module JsonPath
 
       self
     end
+
     # rubocop:enable Metrics/ParameterLists
 
     def with_source_data(data)
@@ -141,7 +143,7 @@ module JsonPath
       end
 
       def transform_value_with_builder(value, path_context)
-        builder = PathsBuilder.new(parent_path_context: path_context)
+        builder = Builder.new(parent_path_context: path_context)
         pb = call_proc(path_context.transform, builder, path_context)
         return pb.build_for(value) if pb&.paths?
 
@@ -172,6 +174,7 @@ module JsonPath
 
         Rordash::HashUtil.deep_symbolize_keys(value)
       end
+
       # rubocop:enable Metrics/PerceivedComplexity,Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity
 
       def apply_defaults(data, path_context)
@@ -211,6 +214,7 @@ module JsonPath
           filled_args.present? ? proc.call(*filled_args) : proc.call
         end
       end
+
       # rubocop:enable Metrics/PerceivedComplexity,Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/AbcSize
 
       def call_proc_with_extra_args(proc, args, **extra_args)
@@ -228,5 +232,6 @@ module JsonPath
       path_context_collection.map(&:to)
     end
   end
+
   # rubocop:enable Metrics/ClassLength
 end
